@@ -1,3 +1,5 @@
+const cardSection = document.getElementById("game-board");
+
 // variable avec entier généré aléatoirement entre 1 et 100
 const dimension = 150;
 const imgStart = Math.floor(Math.random() * 100) + 1;
@@ -20,9 +22,7 @@ function shuffle(cards){
     for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
 
-        const temp = cards[i];
-        cards[i] = cards[j];
-        cards[j] = temp;
+        [cards[i], cards[j]] = [cards[j], cards[i]];
     }
 
     return cards;
@@ -31,6 +31,27 @@ function shuffle(cards){
 // debug
 console.log(shuffle(cards));
 
-document.addEventListener("DOMContentLoaded", function(){
-    
-});
+function initGame(){
+  sortedCards = shuffle(cards);
+
+  sortedCards.forEach(createHTML);
+}
+
+function createHTML(card) {
+  const divCard = document.createElement("div");
+  const tempText = document.createElement("p");
+
+  divCard.classList.add("card");
+  divCard.dataset.value = card;
+
+  divCard.setAttribute("role", "button");
+  divCard.setAttribute("tabindex", "0");
+
+  tempText.textContent = "TEMP";
+
+  divCard.appendChild(tempText);
+
+  cardSection.appendChild(divCard);
+}
+
+initGame();
