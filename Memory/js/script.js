@@ -39,17 +39,12 @@ function initGame(){
 
 function createHTML(card) {
   const divCard = document.createElement("div");
-  const tempText = document.createElement("p");
 
   divCard.classList.add("card");
   divCard.dataset.value = card;
 
   divCard.setAttribute("role", "button");
   divCard.setAttribute("tabindex", "0");
-
-  tempText.textContent = "TEMP";
-
-  divCard.appendChild(tempText);
 
   cardSection.appendChild(divCard);
 }
