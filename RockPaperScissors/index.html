@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 class="center">Rock Paper Scissors</h1>
+    </header>
+    <main class="center">
+        <button id="rockBtn" class="choice-btn" aria-label="Choose Rock" type="button">Rock</button>
+        <button id="paperBtn" class="choice-btn" aria-label="Choose Paper" type="button">Paper</button>
+        <button id="scissorsBtn" class="choice-btn" aria-label="Choose Scissors" type="button">Scissors</button>
+    </main>
+    <section id="result-display" aria-live="polite">
+        <h1 class="center" id="resultRobot">Waiting for an action...</h1>
+    </section>
+    <section id="score">
+        <p class="center" id="win">0 win</p>
+        <p class="center" id="draw">0 tie</p>
+        <p class="center" id="lose">0 loss</p>
+        <button class="center" id="resetBtn" type="button" aria-label="Reset score">Reset score</button>
+    </section>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
