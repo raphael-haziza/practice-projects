@@ -1,4 +1,6 @@
 const cardSection = document.getElementById("game-board");
+const timerDisplay = document.getElementById("timer");
+const result = document.getElementById("result");
 
 // variables de suivi
 let firstCard = null;
@@ -6,6 +8,10 @@ let secondCard = null;
 let lockBoard = false;
 let moves = 0;
 let matchedCount = 0;
+
+// variables du chronomètre
+let seconds = 0;
+let timerInterval = null;
 
 // variable avec entier généré aléatoirement entre 1 et 100
 const dimension = 150;
@@ -17,9 +23,6 @@ const images = [];
 for (let i = 0; i < 8; i++) {
   images.push(`https://picsum.photos/seed/${imgStart + i}/${dimension}/${dimension}`);
 }
-
-// debug
-console.log(images);
 
 // liste de cartes avec les doublons
 let cards = [...images, ...images];
@@ -35,13 +38,51 @@ function shuffle(cards) {
   return cards;
 }
 
-// debug
-console.log(shuffle(cards));
+// formatage du temps en mm:ss
+function formatTime(sec) {
+  const minutes = Math.floor(sec / 60);
+  const secondes = sec % 60;
+
+  return `${String(minutes).padStart(2, "0")}:${String(secondes).padStart(2, "0")}`;
+}
+
+// démarrage du chronomètre
+function startTimer() {
+  timerDisplay.textContent = formatTime(seconds);
+
+  timerInterval = setInterval(() => {
+    seconds++;
+
+    timerDisplay.textContent = formatTime(seconds);
+  }, 1000);
+}
 
 function initGame() {
+  // vide le plateau
+  cardSection.innerHTML = "";
+
+  // reset des variables
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+  moves = 0;
+  matchedCount = 0;
+  seconds = 0;
+
+  // supprime l'ancien timer
+  clearInterval(timerInterval);
+  timerInterval = null;
+
+  // vide le résultat
+  result.textContent = "";
+
+  // mélange les cartes
   const sortedCards = shuffle(cards);
 
   sortedCards.forEach(createHTML);
+
+  // relance le chrono
+  startTimer();
 }
 
 function createHTML(card) {
@@ -53,7 +94,6 @@ function createHTML(card) {
   divCard.setAttribute("role", "button");
   divCard.setAttribute("tabindex", "0");
 
-  // écoute du clic sur la carte
   divCard.addEventListener("click", () => handleCardClick(divCard));
 
   cardSection.appendChild(divCard);
@@ -80,13 +120,11 @@ function handleCardClick(card) {
   lockBoard = true;
   moves++;
 
-  console.log("Nombre de coups :", moves);
-
   checkMatch();
 }
 
 function checkMatch() {
-  // les deux cartes sont identiques
+  // les cartes sont identiques
   if (firstCard.dataset.value === secondCard.dataset.value) {
     firstCard.classList.add("matched");
     secondCard.classList.add("matched");
@@ -94,10 +132,12 @@ function checkMatch() {
     matchedCount += 2;
 
     resetTurn();
+    checkVictory();
+
     return;
   }
 
-  // les deux cartes sont différentes
+  // les cartes sont différentes
   setTimeout(() => {
     firstCard.innerHTML = "";
     secondCard.innerHTML = "";
@@ -110,6 +150,15 @@ function resetTurn() {
   firstCard = null;
   secondCard = null;
   lockBoard = false;
+}
+
+// vérification de la victoire
+function checkVictory() {
+  if (matchedCount === cards.length) {
+    clearInterval(timerInterval);
+
+    result.textContent = `Bravo ! ${moves} coups en ${formatTime(seconds)}`;
+  }
 }
 
 initGame();
